@@ -16,4 +16,16 @@ server.use(express.json());
 server.use('/api/auth', authRouter);
 server.use('/api/jokes', restrict, jokesRouter); // only logged-in users should have access!
 
+
+// server.use((err, req, res, next) => {
+//         res.status(err.status || 500).json({
+//             message: err.message,
+//             stack: err.stack,
+//         })
+// })
+
+server.get('/', (req, res) => {
+    res.status(200).json({ api: "API is up and running!"});
+  });
+
 module.exports = server;
