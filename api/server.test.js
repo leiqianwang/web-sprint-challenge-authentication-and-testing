@@ -36,12 +36,12 @@ describe('server.js', () => {
 describe('GET /api/jokes', () => {
   it('should return a 200 status code', async () => {
     const res = await request(server).get('/api/jokes');
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(200);
   });
 
   it('should return an array of jokes', async () => {
     const res = await request(server).get('/api/jokes');
-    expect(Array.isArray(res.body)).toBe(false);
+    expect(Array.isArray(res.body)).toBe(true);
     if (res.body.length) {
       expect(res.body[0]).toHaveProperty('id');
       expect(res.body[0]).toHaveProperty('joke');
@@ -50,12 +50,12 @@ describe('GET /api/jokes', () => {
   });
 
 describe('POST /api/auth/register', () => {
-  // it('should return a 201 status code on successful registration', async () => {
-  //   const res = await request(server)
-  //     .post('/api/auth/register')
-  //     .send({ username: 'TestUser', password: 'TestPass' });
-  //   expect(res.status).toBe(201);
-  // });
+  it('should return a 201 status code on successful registration', async () => {
+    const res = await request(server)
+      .post('/api/auth/register')
+      .send({ username: 'TestUser', password: 'TestPass' });
+    expect(res.status).toBe(201);
+  });
 
   it('should return a 400 status code if username or password is missing', async () => {
     const res = await request(server)
@@ -66,12 +66,19 @@ describe('POST /api/auth/register', () => {
 });
 
 describe('POST /api/auth/login', () => {
-  // it('should return a 200 status code on successful login', async () => {
-  //   const res = await request(server)
-  //     .post('/api/auth/login')
-  //     .send({ username: 'TestUser', password: 'TestPass' });
-  //   expect(res.status).toBe(200);
-  // });
+  beforeEach(async () => {
+    // Create a user before each test
+    await request(server)
+      .post('/api/auth/register')
+      .send({ username: 'TestUser', password: 'TestPass' });
+  });
+
+  it('should return a 200 status code on successful login', async () => {
+    const res = await request(server)
+      .post('/api/auth/login')
+      .send({ username: 'TestUser', password: 'TestPass' });
+    expect(res.status).toBe(200);
+  });
 
   it('should return a 400 status code if username or password is missing', async () => {
     const res = await request(server)
