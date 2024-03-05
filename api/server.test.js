@@ -33,6 +33,22 @@ describe('server.js', () => {
       })
 })
 
+describe('GET /api/jokes', () => {
+  it('should return a 200 status code', async () => {
+    const res = await request(server).get('/api/jokes');
+    expect(res.status).toBe(401);
+  });
+
+  it('should return an array of jokes', async () => {
+    const res = await request(server).get('/api/jokes');
+    expect(Array.isArray(res.body)).toBe(false);
+    if (res.body.length) {
+      expect(res.body[0]).toHaveProperty('id');
+      expect(res.body[0]).toHaveProperty('joke');
+    }
+});
+  });
+
 describe('POST /api/auth/register', () => {
   // it('should return a 201 status code on successful registration', async () => {
   //   const res = await request(server)
@@ -64,3 +80,4 @@ describe('POST /api/auth/login', () => {
     expect(res.status).toBe(400);
   });
 });
+
