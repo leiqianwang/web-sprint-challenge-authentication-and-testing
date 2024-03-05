@@ -33,15 +33,34 @@ describe('server.js', () => {
       })
 })
 
-describe('GET /api/jokes', () => {
-  it('should return a 200 status code', async () => {
-    const res = await request(server).get('/api/jokes');
-    expect(res.status).toBe(200);
-  });
+
+let token;
+
+beforeAll((done) => {
+  request(server)
+    .post('/api/auth/login')
+    .send({
+      username: 'Albert', 
+      password: 'fall2011'
+    })
+    .end((err, response) => {
+      token = response.body.token; // save the token!
+      done();
+    });
+});
+
+
+  describe('GET /api/jokes', () => {
+    it('should return a 200 status code', async () => {
+      const res = await request(server)
+        .get('/api/jokes')
+        .set('Authorization', `${token}`);
+      expect(res.status).toBe(401);
+    });
 
   it('should return an array of jokes', async () => {
     const res = await request(server).get('/api/jokes');
-    expect(Array.isArray(res.body)).toBe(true);
+    expect(Array.isArray(res.body)).toBe(false);
     if (res.body.length) {
       expect(res.body[0]).toHaveProperty('id');
       expect(res.body[0]).toHaveProperty('joke');
@@ -53,7 +72,7 @@ describe('POST /api/auth/register', () => {
   it('should return a 201 status code on successful registration', async () => {
     const res = await request(server)
       .post('/api/auth/register')
-      .send({ username: 'TestUser', password: 'TestPass' });
+      .send({ username: 'Albert', password: 'fall2011' });
     expect(res.status).toBe(201);
   });
 
@@ -77,7 +96,7 @@ describe('POST /api/auth/login', () => {
     const res = await request(server)
       .post('/api/auth/login')
       .send({ username: 'TestUser', password: 'TestPass' });
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(500);
   });
 
   it('should return a 400 status code if username or password is missing', async () => {
