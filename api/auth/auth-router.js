@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ message: 'username and password required' });
       }
     
-      const hash = bcrypt.hashSync(user.password, 10); 
+      const hash = bcrypt.hashSync(user.password, 8); 
       user.password = hash;
     
       try {

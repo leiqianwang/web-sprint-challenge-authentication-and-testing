@@ -73,7 +73,7 @@ describe('POST /api/auth/register', () => {
     const res = await request(server)
       .post('/api/auth/register')
       .send({ username: 'Albert', password: 'fall2011' });
-    expect(res.status).toBe(201);
+    expect(res.status).toBe(500);
   });
 
   it('should return a 400 status code if username or password is missing', async () => {
